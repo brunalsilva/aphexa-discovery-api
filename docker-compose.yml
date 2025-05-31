@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: aphexa_discovery_postgres
+    environment:
+      POSTGRES_USER: aphexa_user
+      POSTGRES_PASSWORD: aphexa_pass
+      POSTGRES_DB: aphexa_discovery_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.2
+    container_name: aphexa_discovery_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+volumes:
+  pgdata:
+  esdata:
